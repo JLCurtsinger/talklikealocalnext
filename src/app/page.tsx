@@ -1,95 +1,139 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client";
+
+import React, { useState, useEffect } from 'react';
+import { Navigation } from '@/components/Navigation';
+import { SearchBar } from '@/components/SearchBar';
+import { AlphabetNav } from '@/components/AlphabetNav';
+import { StateSection } from '@/components/StateSection';
+import { SuggestionsForm } from '@/components/SuggestionsForm';
+import { BackToTop } from '@/components/BackToTop';
+import { USMap } from '@/components/USMap';
+import { ThemeProvider } from '@/contexts/ThemeContext';
+import { states } from '@/data/states';
+import { State } from '@/types';
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [searchTerm, setSearchTerm] = useState('');
+  const [expandedStates, setExpandedStates] = useState<Set<string>>(new Set());
+  const [filteredStates, setFilteredStates] = useState<State[]>(states);
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  useEffect(() => {
+    if (!searchTerm.trim()) {
+      setFilteredStates(states);
+      return;
+    }
+
+    const filtered = states.filter(state => {
+      const stateMatch = state.name.toLowerCase().includes(searchTerm.toLowerCase());
+      const termMatch = state.terms.some(term => 
+        term.word.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        term.phonetic?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        term.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      return stateMatch || termMatch;
+    });
+
+    setFilteredStates(filtered);
+  }, [searchTerm]);
+
+  const toggleState = (stateName: string) => {
+    setExpandedStates(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(stateName)) {
+        newSet.delete(stateName);
+      } else {
+        newSet.add(stateName);
+      }
+      return newSet;
+    });
+  };
+
+  const handleStateClick = (stateName: string) => {
+    const state = states.find(s => s.name === stateName);
+    if (state) {
+      toggleState(stateName);
+      // Scroll to the state section
+      setTimeout(() => {
+        const element = document.getElementById(`state-${stateName.toLowerCase().replace(/\s+/g, '-')}`);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  };
+
+  return (
+    <ThemeProvider>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+        <Navigation />
+        
+        <main className="pt-16">
+          {/* Hero Section */}
+          <section className="py-20 px-4 text-center">
+            <div className="max-w-4xl mx-auto">
+              <h1 className="text-5xl md:text-6xl font-bold mb-6 hero-animate">
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Talk Like a Local
+                </span>
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 hero-animate-delay-1">
+                Discover how locals pronounce names, places, and terms across the United States
+              </p>
+              <div className="hero-animate-delay-2">
+                <USMap onStateClick={handleStateClick} />
+              </div>
+            </div>
+          </section>
+
+          {/* Search Section */}
+          <section className="py-8 px-4">
+            <div className="max-w-4xl mx-auto">
+              <SearchBar onSearch={setSearchTerm} />
+            </div>
+          </section>
+
+          {/* Alphabet Navigation */}
+          <section className="py-8 px-4">
+            <div className="max-w-4xl mx-auto">
+              <AlphabetNav />
+            </div>
+          </section>
+
+          {/* States Section */}
+          <section className="py-8 px-4">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">
+                Local Pronunciations by State
+              </h2>
+              <div className="space-y-4">
+                {filteredStates.map((state) => (
+                  <StateSection
+                    key={state.name}
+                    state={state}
+                    isExpanded={expandedStates.has(state.name)}
+                    onToggle={() => toggleState(state.name)}
+                  />
+                ))}
+              </div>
+            </div>
+          </section>
+
+          {/* Suggestions Section */}
+          <section id="suggestions" className="py-16 px-4 bg-white dark:bg-gray-800">
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl font-bold text-center mb-8 text-gray-800 dark:text-white">
+                Make a Suggestion
+              </h2>
+              <p className="text-center text-gray-600 dark:text-gray-300 mb-8">
+                Know a local pronunciation we&apos;re missing? Help us expand our database!
+              </p>
+              <SuggestionsForm />
+            </div>
+          </section>
+        </main>
+
+        <BackToTop />
+      </div>
+    </ThemeProvider>
   );
 }

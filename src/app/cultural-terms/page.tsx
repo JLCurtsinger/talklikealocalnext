@@ -61,7 +61,7 @@ export default function CulturalTerms() {
           {/* Alphabet Navigation */}
           <section className="py-8 px-4">
             <div className="max-w-4xl mx-auto">
-              <AlphabetNav />
+              <AlphabetNav showFixedSideNav={true} />
             </div>
           </section>
 

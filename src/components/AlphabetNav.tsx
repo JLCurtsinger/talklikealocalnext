@@ -6,7 +6,11 @@ import { states } from '@/data/states';
 import { cultures } from '@/data/cultures';
 import { generateTermId } from '@/lib/share';
 
-export function AlphabetNav() {
+interface AlphabetNavProps {
+  showFixedSideNav?: boolean;
+}
+
+export function AlphabetNav({ showFixedSideNav = false }: AlphabetNavProps) {
   const pathname = usePathname();
   const [activeLetters, setActiveLetters] = useState<string[]>([]);
   const [currentLetter, setCurrentLetter] = useState<string | null>(null);
@@ -100,39 +104,41 @@ export function AlphabetNav() {
         </div>
       </nav>
 
-      {/* Vertical nav on the right */}
-      <nav 
-        className={`fixed right-0 top-1/2 -translate-y-1/2 transition-all duration-300 z-20
-          ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}
-          max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-transparent
-          @media (max-height: 600px) { max-height: 70vh }
-        `}
-        aria-label="Quick navigation"
-      >
-        <div className="flex flex-col gap-1 sm:gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-l-lg shadow-lg border-l-2 border-blue-500/20 p-1.5 sm:p-2 mr-0">
-          {activeLetters.map(letter => {
-            const isCurrent = currentLetter === letter;
-            
-            return (
-              <button
-                key={letter}
-                onClick={() => scrollToLetter(letter)}
-                className={`
-                  w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-l-md
-                  font-semibold text-xs sm:text-sm transition-all duration-200
-                  hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white hover:shadow-md
-                  ${isCurrent 
-                    ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md' 
-                    : 'bg-white/80 dark:bg-gray-700/50 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'}
-                `}
-                aria-label={`Jump to ${letter} section`}
-              >
-                {letter}
-              </button>
-            );
-          })}
-        </div>
-      </nav>
+      {/* Vertical nav on the right - only show when showFixedSideNav is true */}
+      {showFixedSideNav && (
+        <nav 
+          className={`fixed right-0 top-1/2 -translate-y-1/2 transition-all duration-300 z-20
+            ${isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full pointer-events-none'}
+            max-h-[80vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500 scrollbar-track-transparent
+            @media (max-height: 600px) { max-height: 70vh }
+          `}
+          aria-label="Quick navigation"
+        >
+          <div className="flex flex-col gap-1 sm:gap-2 bg-white/90 dark:bg-gray-800/90 backdrop-blur-sm rounded-l-lg shadow-lg border-l-2 border-blue-500/20 p-1.5 sm:p-2 mr-0">
+            {activeLetters.map(letter => {
+              const isCurrent = currentLetter === letter;
+              
+              return (
+                <button
+                  key={letter}
+                  onClick={() => scrollToLetter(letter)}
+                  className={`
+                    w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-l-md
+                    font-semibold text-xs sm:text-sm transition-all duration-200
+                    hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 hover:text-white hover:shadow-md
+                    ${isCurrent 
+                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-md' 
+                      : 'bg-white/80 dark:bg-gray-700/50 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'}
+                  `}
+                  aria-label={`Jump to ${letter} section`}
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>
+        </nav>
+      )}
     </>
   );
 }

@@ -6,7 +6,6 @@ import { AlphabetNav } from '@/components/AlphabetNav';
 import { StateSection } from '@/components/StateSection';
 import { SuggestionsForm } from '@/components/SuggestionsForm';
 import { BackToTop } from '@/components/BackToTop';
-import { USMap } from '@/components/USMap';
 
 import { states } from '@/data/states';
 import { State } from '@/types';
@@ -47,51 +46,47 @@ export default function Home() {
     });
   };
 
-  const handleStateClick = (stateName: string) => {
-    const state = states.find(s => s.name === stateName);
-    if (state) {
-      toggleState(stateName);
-      // Scroll to the state section
-      setTimeout(() => {
-        const element = document.getElementById(`state-${stateName.toLowerCase().replace(/\s+/g, '-')}`);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth' });
-        }
-      }, 100);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         <main className="pt-16">
           {/* Hero Section */}
-          <section className="py-20 px-4 text-center">
+          <section className="py-16 px-4 text-center">
             <div className="max-w-4xl mx-auto">
-              <h1 className="text-5xl md:text-6xl font-bold mb-6 hero-animate">
+              <h1 className="text-5xl md:text-6xl font-extrabold mb-6 hero-animate text-center">
                 <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Talk Like a Local
+                  Learn to Talk Like a Local Across the U.S.!
                 </span>
               </h1>
-              <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 hero-animate-delay-1">
-                Discover how locals pronounce names, places, and terms across the United States
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-8 hero-animate-delay-1 text-center max-w-3xl mx-auto">
+                Discover how locals pronounce places and phrases in each state. Click a letter below to explore pronunciations from Alabama to Wyoming.
               </p>
-              <div className="hero-animate-delay-2">
-                <USMap onStateClick={handleStateClick} />
-              </div>
+            </div>
+          </section>
+
+          {/* Alphabet Navigation */}
+          <section className="px-4">
+            <div className="max-w-4xl mx-auto">
+              <AlphabetNav />
             </div>
           </section>
 
           {/* Search Section */}
-          <section className="py-8 px-4">
+          <section className="px-4 mt-6">
             <div className="max-w-4xl mx-auto">
               <SearchBar onSearch={setSearchTerm} />
             </div>
           </section>
 
-          {/* Alphabet Navigation */}
-          <section className="py-8 px-4">
-            <div className="max-w-4xl mx-auto">
-              <AlphabetNav />
+          {/* Cultural Terms CTA */}
+          <section className="px-4 mt-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <a
+                href="/cultural-terms"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                Explore Cultural Terms
+              </a>
             </div>
           </section>
 

@@ -12,8 +12,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const culture = cultures.find(c => (c.slug ?? slugify(c.name)) === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const culture = cultures.find(c => (c.slug ?? slugify(c.name)) === slug);
   
   if (!culture) {
     return {
@@ -29,13 +30,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: `Explore ${culture.name} language terms and cultural pronunciations.`,
     },
     alternates: {
-      canonical: `/tribes/${params.slug}`,
+      canonical: `/tribes/${slug}`,
     },
   };
 }
 
-export default function CulturePageRoute({ params }: { params: { slug: string } }) {
-  const culture = cultures.find(c => (c.slug ?? slugify(c.name)) === params.slug);
+export default async function CulturePageRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const culture = cultures.find(c => (c.slug ?? slugify(c.name)) === slug);
   
   if (!culture) {
     notFound();

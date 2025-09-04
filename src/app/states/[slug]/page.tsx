@@ -12,8 +12,9 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const state = states.find(s => (s.slug ?? slugify(s.name)) === params.slug);
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
+  const { slug } = await params;
+  const state = states.find(s => (s.slug ?? slugify(s.name)) === slug);
   
   if (!state) {
     return {
@@ -29,13 +30,14 @@ export async function generateMetadata({ params }: { params: { slug: string } })
       description: `Discover how locals pronounce names, places, and terms in ${state.name}.`,
     },
     alternates: {
-      canonical: `/states/${params.slug}`,
+      canonical: `/states/${slug}`,
     },
   };
 }
 
-export default function StatePageRoute({ params }: { params: { slug: string } }) {
-  const state = states.find(s => (s.slug ?? slugify(s.name)) === params.slug);
+export default async function StatePageRoute({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const state = states.find(s => (s.slug ?? slugify(s.name)) === slug);
   
   if (!state) {
     notFound();

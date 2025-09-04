@@ -21,7 +21,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
     debounce((term: string) => {
       onSearch(term);
     }, 300),
-    [onSearch]
+    []
   );
 
   useEffect(() => {

@@ -1,14 +1,13 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { Navigation } from '@/components/Navigation';
 import { SearchBar } from '@/components/SearchBar';
 import { AlphabetNav } from '@/components/AlphabetNav';
 import { StateSection } from '@/components/StateSection';
 import { SuggestionsForm } from '@/components/SuggestionsForm';
 import { BackToTop } from '@/components/BackToTop';
 import { USMap } from '@/components/USMap';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+
 import { states } from '@/data/states';
 import { State } from '@/types';
 
@@ -63,10 +62,7 @@ export default function Home() {
   };
 
   return (
-    <ThemeProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        <Navigation />
-        
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
         <main className="pt-16">
           {/* Hero Section */}
           <section className="py-20 px-4 text-center">
@@ -134,6 +130,5 @@ export default function Home() {
 
         <BackToTop />
       </div>
-    </ThemeProvider>
   );
 }

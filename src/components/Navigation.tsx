@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
-import { MapPin, Menu, X, BookOpen } from 'lucide-react';
+import { MapPin, Menu, X } from 'lucide-react';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { DisputeForm } from '@/components/DisputeForm';
 
@@ -168,16 +168,7 @@ export function Navigation() {
               About Us
             </Link>
 
-            <a
-              href="/blog"
-              onClick={() => setIsMenuOpen(false)}
-              className="block px-4 py-2 text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors"
-            >
-              <div className="flex items-center space-x-2">
-                <BookOpen className="w-4 h-4" />
-                <span>Blog</span>
-              </div>
-            </a>
+
 
             <Link
               href="/impact"

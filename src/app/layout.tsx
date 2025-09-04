@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "@/index.css";
+import { Navigation } from "@/components/Navigation";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://talklikealocal.org"),
@@ -18,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
+        <ThemeProvider>
+          <Navigation />
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

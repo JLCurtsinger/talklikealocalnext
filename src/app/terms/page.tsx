@@ -1,16 +1,14 @@
 "use client";
 
 import React from 'react';
-import { Navigation } from '@/components/Navigation';
+
 import { BackToTop } from '@/components/BackToTop';
-import { ThemeProvider } from '@/contexts/ThemeContext';
+
 
 export default function Terms() {
   return (
-    <ThemeProvider>
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
-        <Navigation />
-        
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors">
+
         <main className="pt-16">
           {/* Hero Section */}
           <section className="py-20 px-4 text-center">
@@ -71,6 +69,5 @@ export default function Terms() {
 
         <BackToTop />
       </div>
-    </ThemeProvider>
   );
 }
